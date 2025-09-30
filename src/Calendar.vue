@@ -1,130 +1,186 @@
 <template>
-  <div class="calendar-page flex flex-col p-4 bg-white text-black min-h-screen w-full">
-    <!-- Titre -->
-    <h1 class="text-3xl font-bold mb-6 text-center">Calendrier</h1>
-
-    <!-- Contrôles du calendrier -->
-    <div class="flex justify-between items-center w-full mb-6">
-      <button @click="prevMonth" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-black">‹</button>
-      <div class="text-xl font-semibold text-center flex-grow">
-        {{ currentMonthName }} {{ currentYear }}
-      </div>
-      <button @click="nextMonth" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-black">›</button>
-    </div>
-
-    <!-- Jours de la semaine -->
-    <div class="grid grid-cols-7 text-center font-semibold border-b pb-2">
-      <div v-for="day in weekdays" :key="day" class="text-black uppercase">
-        {{ day }}
-      </div>
-    </div>
-
-    <!-- Grille du mois -->
-    <div class="grid grid-cols-7 flex-grow border-l border-t">
-      <!-- Cases vides avant le premier jour -->
-      <div v-for="blank in firstDayOffset" :key="'b'+blank" class="border-r border-b"></div>
-
-      <!-- Jours du mois -->
-      <div
-        v-for="day in daysInMonth"
-        :key="day"
-        @click="selectDay(day)"
-        :class="[
-          'border-r border-b p-2 cursor-pointer transition-all flex flex-col',
-          selectedDay === day ? 'bg-blue-100' : 'hover:bg-gray-100'
-        ]"
-      >
-        <!-- Numéro du jour -->
-        <div class="text-sm font-bold mb-1">{{ day }}</div>
-
-        <!-- Événements -->
-        <div v-if="events[day]?.length" class="flex flex-col gap-1 overflow-hidden">
-          <span
-            v-for="(event, i) in events[day]"
-            :key="i"
-            class="text-xs bg-blue-200 text-blue-800 rounded px-1 truncate"
-          >
-            {{ event.time }} – {{ event.title }}
-          </span>
+  <div class="calendar-page">
+    <!-- Header -->
+    <header class="header">
+      <div class="user-info">
+        <img src="./personalpicture.png" class="avatar" />
+        <div>
+          <h1>Benoît</h1>
+          <p>Matricule #873873</p>
         </div>
       </div>
-    </div>
-
-    <!-- Aperçu des événements -->
-    <div v-if="selectedDay" class="mt-6 p-4 border rounded bg-gray-50">
-      <h2 class="font-semibold mb-2 text-center">
-        Événements du {{ selectedDay }}/{{ currentMonth + 1 }}/{{ currentYear }}
-      </h2>
-      <div v-if="events[selectedDay]?.length">
-        <div v-for="(event, i) in events[selectedDay]" :key="i" class="mb-2">
-          <strong>{{ event.time }}</strong> – {{ event.title }}
+      <div class="roadmap">
+        <span>{{ monthName }} {{ year }}</span>
+        <div class="progress-bar">
+          <div class="progress"></div>
         </div>
       </div>
-      <div v-else class="text-center">Aucun événement prévu.</div>
-    </div>
+    </header>
+
+    <!-- Calendar -->
+    <section class="calendar-grid">
+      <div class="day header" v-for="d in daysOfWeek" :key="d">{{ d }}</div>
+
+      <div v-for="(cell, index) in calendarCells" :key="index" class="day" :class="{ empty: !cell.day, event: cell.event }">
+        <div v-if="cell.day">{{ cell.day }}</div>
+        <span v-if="cell.event" class="event-label">{{ cell.event }}</span>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue";
 
-const today = new Date()
-const currentMonth = ref(today.getMonth())
-const currentYear = ref(today.getFullYear())
-const selectedDay = ref(null)
+// Date actuelle
+const today = new Date();
+const month = ref(today.getMonth());
+const year = ref(today.getFullYear());
 
-const events = ref({
-  5: [{ title: 'Mentorat A', time: '10:00' }, { title: 'Réunion B', time: '14:00' }],
-  12: [{ title: 'Mentorat C', time: '09:00' }],
-  20: [{ title: 'Webinaire', time: '16:00' }]
-})
+// Jours de la semaine
+const daysOfWeek = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
-const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']
-const weekdays = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim']
+// Noms des mois
+const monthNames = [
+  "Janvier","Février","Mars","Avril","Mai","Juin",
+  "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
+];
 
-const daysInMonth = computed(() => {
-  return new Array(new Date(currentYear.value, currentMonth.value + 1, 0).getDate()).fill(0).map((_, i) => i + 1)
-})
+const monthName = computed(() => monthNames[month.value]);
 
-const firstDayOffset = computed(() => {
-  const day = new Date(currentYear.value, currentMonth.value, 1).getDay()
-  return day === 0 ? 6 : day - 1
-})
+// Exemple d'événements
+const events = {
+  "2025-09-14": "Réunion",
+  "2025-09-23": "Formation",
+};
 
-const currentMonthName = computed(() => monthNames[currentMonth.value])
+// Génération du calendrier
+const calendarCells = computed(() => {
+  const firstDay = new Date(year.value, month.value, 1);
+  const lastDay = new Date(year.value, month.value + 1, 0);
 
-const prevMonth = () => {
-  if (currentMonth.value === 0) {
-    currentMonth.value = 11
-    currentYear.value--
-  } else {
-    currentMonth.value--
+  const startDay = (firstDay.getDay() + 6) % 7; // Lundi = 0
+  const totalDays = lastDay.getDate();
+
+  const cells = [];
+
+  // Cases vides avant le 1er
+  for (let i = 0; i < startDay; i++) {
+    cells.push({ day: null });
   }
-  selectedDay.value = null
-}
 
-const nextMonth = () => {
-  if (currentMonth.value === 11) {
-    currentMonth.value = 0
-    currentYear.value++
-  } else {
-    currentMonth.value++
+  // Jours du mois
+  for (let d = 1; d <= totalDays; d++) {
+    const dateKey = `${year.value}-${String(month.value + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    cells.push({
+      day: d,
+      event: events[dateKey] || null,
+    });
   }
-  selectedDay.value = null
-}
 
-const selectDay = (day) => {
-  selectedDay.value = day
-}
+  return cells;
+});
 </script>
 
 <style scoped>
 .calendar-page {
-  width: 100%;
-  height: 100%;
+  background: #f9fafb;
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  font-family: sans-serif;
+  color: #111;
+  box-sizing: border-box;
 }
 
-.grid > div {
-  min-height: 100px; /* hauteur des cases */
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.roadmap {
+  text-align: right;
+}
+
+.progress-bar {
+  width: 150px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.progress {
+  width: 40%;
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 4px;
+}
+
+/* Calendar grid plein écran */
+.calendar-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 6px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.day {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.day.header {
+  background: transparent;
+  font-weight: bold;
+  text-align: center;
+  justify-content: center;
+  color: #374151;
+}
+
+.day.empty {
+  background: transparent;
+  box-shadow: none;
+}
+
+.event {
+  background: #dbeafe;
+  border: 1px solid #3b82f6;
+}
+
+.event-label {
+  margin-top: auto;
+  font-size: 10px;
+  background: #3b82f6;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  align-self: center;
 }
 </style>
