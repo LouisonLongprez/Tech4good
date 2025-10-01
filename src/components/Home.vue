@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="header">
       <div class="user-info">
-        <img src="./personalpicture.png" class="avatar" />
+          <img src="./personalpicture.png" class="avatar" />
         <div>
           <h1>Alexandre</h1>
           <p>Matricule #873873</p>
@@ -17,36 +17,46 @@
       </div>
     </header>
 
-    <!-- Grille de cartes 3x3 -->
-    <div class="cards-grid">
-      <!-- Documents & Infos pratiques -->
-      <div class="card">📄 Contrat signé</div>
-      <div class="card">📁 Documents administratifs</div>
-      <div class="card">▶️ Guide de passation</div>
+    <!-- Sections -->
+    <section class="card">
+      <h2>Documents & Infos pratiques</h2>
+      <ul>
+        <li>📄 Contrat signé</li>
+        <li>📁 Documents administratifs</li>
+        <li>▶️ Guide de passation</li>
+      </ul>
+    </section>
 
-      <!-- Formations & Jeux -->
-      <div class="card">🎓 Formation interne</div>
-      <div class="card">❓ Quiz ludique</div>
-      <div class="card">🧩 Escape game</div>
+    <section class="card">
+      <h2>Formations & Jeux</h2>
+      <ul>
+        <li>🎓 Formation interne</li>
+        <li>❓ Quiz ludique</li>
+        <li>🧩 Escape game</li>
+      </ul>
+    </section>
 
-      <!-- Mentorat & Social -->
-      <div class="card">
-        <router-link to="/calendrier" style="text-decoration: none; color: inherit;">
-          🤝 Trouver un mentor
-        </router-link>
-      </div>
-      <div class="card">
-        <router-link to="/calendrier" style="text-decoration: none; color: inherit;">
-          👥 Reverse mentoring
-        </router-link>
-      </div>
-      <div class="card">🌍 Missions sociales</div>
-    </div>
+    <section class="card">
+      <h2>Mentorat & Social</h2>
+      <ul>
+        <li>
+          <router-link to="/calendrier" style="text-decoration: none; color: inherit;">
+            🤝 Trouver un mentor
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/calendrier" style="text-decoration: none; color: inherit;">
+            👥 Reverse mentoring
+          </router-link>
+        </li>
+        <li>🌍 Missions sociales</li>
+      </ul>
+    </section>
   </div>
 </template>
 
 <script setup>
-// pas de logique pour l'instant
+// pas de logique encore
 </script>
 
 <style scoped>
@@ -80,6 +90,7 @@
   border-radius: 50%;
   width: 40px;
   height: 40px;
+  object-fit: cover;
 }
 
 .roadmap {
@@ -114,7 +125,22 @@
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card h2 {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card li {
+  margin-bottom: 8px;
   font-size: 14px;
-  text-align: center;
 }
 </style>

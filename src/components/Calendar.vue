@@ -30,6 +30,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: "AppCalendar" });
 import { ref, computed } from "vue";
 
 // Date actuelle
