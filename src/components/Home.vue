@@ -6,7 +6,7 @@
         <!-- Avatar personnel -->
         <img src="./personalpicture.png" class="avatar" />
         <div>
-          <h1>Benoît</h1>
+          <h1>Alexis</h1>
           <p>Matricule #873873</p>
         </div>
       </div>
