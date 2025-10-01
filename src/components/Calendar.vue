@@ -5,7 +5,7 @@
       <div class="user-info">
         <img src="./personalpicture.png" class="avatar" />
         <div>
-          <h1>Benoît</h1>
+          <h1>Alexandre</h1>
           <p>Matricule #873873</p>
         </div>
       </div>
