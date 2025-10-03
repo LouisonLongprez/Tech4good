@@ -1,35 +1,125 @@
 @import './base.css';
 
+/* Reset global pour prendre toute la largeur */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
   font-weight: normal;
+}
+
+/* Assurer que tous les conteneurs Vuetify prennent toute la largeur */
+.v-application {
+  width: 100% !important;
+}
+
+.v-main {
+  width: 100% !important;
+}
+
+/* Container fluide pour tous les composants */
+.v-container--fluid {
+  max-width: none !important;
+  width: 100% !important;
+  padding: 0 16px !important;
+}
+
+/* Amélioration des contrastes pour l'accessibilité */
+.text-medium-emphasis {
+  color: rgb(var(--v-theme-on-surface-variant)) !important;
+  opacity: 0.8;
+}
+
+.text-high-emphasis {
+  color: rgb(var(--v-theme-on-surface)) !important;
+  opacity: 1;
+}
+
+/* Amélioration du contraste des cartes */
+.v-card {
+  border: 1px solid rgb(var(--v-theme-outline-variant));
+}
+
+.v-card-title {
+  color: rgb(var(--v-theme-on-surface)) !important;
+  font-weight: 600;
+}
+
+.v-card-text {
+  color: rgb(var(--v-theme-on-surface-variant)) !important;
+}
+
+/* Amélioration des boutons pour contraste */
+.v-btn--variant-text {
+  color: rgb(var(--v-theme-primary)) !important;
+}
+
+.v-btn--variant-outlined {
+  border-color: rgb(var(--v-theme-outline)) !important;
+  color: rgb(var(--v-theme-primary)) !important;
+}
+
+/* Focus states pour accessibilité */
+.v-btn:focus-visible,
+.v-text-field:focus-within,
+.v-select:focus-within {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
+}
+
+/* Amélioration du contraste des icônes */
+.v-icon {
+  color: inherit;
+}
+
+/* Styles pour les états de liens actifs */
+.router-link-active {
+  font-weight: 600 !important;
+}
+
+/* Amélioration des alertes */
+.v-alert {
+  border-left: 4px solid;
+}
+
+.v-alert--variant-tonal.v-alert--type-success {
+  border-left-color: rgb(var(--v-theme-success));
+  background-color: rgba(var(--v-theme-success), 0.1);
+}
+
+.v-alert--variant-tonal.v-alert--type-error {
+  border-left-color: rgb(var(--v-theme-error));
+  background-color: rgba(var(--v-theme-error), 0.1);
+}
+
+.v-alert--variant-tonal.v-alert--type-warning {
+  border-left-color: rgb(var(--v-theme-warning));
+  background-color: rgba(var(--v-theme-warning), 0.1);
+}
+
+.v-alert--variant-tonal.v-alert--type-info {
+  border-left-color: rgb(var(--v-theme-info));
+  background-color: rgba(var(--v-theme-info), 0.1);
 }
 
 a,
 .green {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: rgb(var(--v-theme-primary));
   transition: 0.4s;
   padding: 3px;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    background-color: rgba(var(--v-theme-primary), 0.2);
   }
 }
