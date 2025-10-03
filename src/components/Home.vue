@@ -19,7 +19,6 @@
               </v-col>
               <v-col cols="12" md="6" class="text-md-right">
                 <div>
-                  <p class="text-body-2 mb-2">{{ quizMotivationalMessage }}</p>
                   <v-progress-linear
                     :model-value="quizProgress"
                     color="success"
@@ -27,9 +26,9 @@
                     rounded
                     class="mb-1"
                   ></v-progress-linear>
-                  <p class="text-caption text-on-surface-variant font-weight-medium">
+                  <div class="text-caption text-medium-emphasis text-center">
                     {{ userStats.completedQuizzes }}/20 quiz réussis ({{ quizProgress }}%)
-                  </p>
+                  </div>
                 </div>
               </v-col>
             </v-row>
@@ -174,7 +173,7 @@
                 <template v-slot:prepend>
                   <v-icon>mdi-help</v-icon>
                 </template>
-                <v-list-item-title>Quiz ludique</v-list-item-title>
+                <v-list-item-title>Quiz Tech4Good</v-list-item-title>
                 <template v-slot:append>
                   <v-icon size="small" color="secondary">mdi-arrow-right</v-icon>
                 </template>
@@ -541,7 +540,7 @@ const canUploadGuide = computed(() => {
 });
 
 // Dashboard statistics
-// Progression des quiz (sur 20)
+// Progression des quiz (sur 20 pour l'UX)
 const quizProgress = computed(() => {
   const maxQuizzes = 20
   const completed = userStats.value.completedQuizzes
@@ -551,12 +550,11 @@ const quizProgress = computed(() => {
 // Message motivationnel pour les quiz
 const quizMotivationalMessage = computed(() => {
   const completed = userStats.value.completedQuizzes
-  if (completed === 0) return "Commencez votre parcours quiz ! 🎯"
-  if (completed < 5) return "Excellent début ! Continuez ! 🚀"
-  if (completed < 10) return "Vous progressez bien ! 📈"
-  if (completed < 15) return "Presque à mi-parcours ! 💪"
-  if (completed < 20) return "Plus que quelques quiz ! 🏆"
-  return "Bravo ! Tous les quiz terminés ! 🎉"
+  if (completed === 0) return "Commencez votre parcours Tech4Good ! �"
+  if (completed === 1) return "Premier quiz réussi ! Continuez ! 🎯"
+  if (completed === 2) return "Excellent progrès ! �"
+  if (completed === 3) return "Presque au bout ! Dernier quiz ! 🏆"
+  return "Parcours Tech4Good complété ! Bravo ! 🎉"
 })
 
 // Dashboard statistics - Mise à jour dynamique

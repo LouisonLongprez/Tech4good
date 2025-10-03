@@ -64,7 +64,7 @@
               <v-icon size="80" color="primary" class="mb-4">mdi-gamepad-variant</v-icon>
               <h1 class="text-h3 mb-4">Quiz Tech4Good</h1>
               <p class="text-h6 text-medium-emphasis mb-6">
-                Testez vos connaissances et gagnez des points !
+                Testez vos connaissances sur la technologie pour le bien social !
               </p>
             </v-card-text>
           </v-card>
@@ -449,7 +449,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useUser } from '../composables/useUser.js'
 import { authHelpers } from '../lib/supabase.js'
 
@@ -484,75 +484,132 @@ const currentQuestion = computed(() => {
 
 const quizCategories = reactive([
   {
-    id: 'onboarding',
-    name: 'Onboarding',
-    icon: '🚀',
-    description: 'Bases de votre intégration',
+    id: 'tech4good-basics',
+    name: 'Tech4Good - Bases',
+    icon: '🌱',
+    description: 'Fondamentaux de la tech pour le bien social',
     difficulty: 'easy',
     locked: false,
     questions: [
       {
-        question: 'Quelle est la mission principale de Tech4Good ?',
+        question: 'Que signifie "Tech4Good" ?',
         answers: [
-          { text: 'Développer des apps mobiles', correct: false },
-          { text: 'Utiliser la tech pour l\'impact social', correct: true },
-          { text: 'Créer des jeux vidéo', correct: false },
-          { text: 'Vendre des ordinateurs', correct: false }
+          { text: 'Technologie pour le profit', correct: false },
+          { text: 'Technologie pour le bien social', correct: true },
+          { text: 'Technologie pour les entreprises', correct: false },
+          { text: 'Technologie pour les gouvernements', correct: false }
         ],
-        explanation: 'Tech4Good utilise la technologie pour créer un impact social positif et résoudre des problèmes sociétaux.',
-        tip: 'Cette mission guide toutes nos décisions produit !'
+        explanation: 'Tech4Good désigne l\'utilisation de la technologie pour résoudre des problèmes sociaux et environnementaux.',
+        tip: 'C\'est notre mission principale chez Tech4Good !'
       },
       {
-        question: 'Combien de temps dure la période d\'onboarding complète ?',
+        question: 'Quel est un exemple concret d\'impact Tech4Good ?',
         answers: [
-          { text: '1 mois', correct: false },
-          { text: '3 mois', correct: false },
-          { text: '6 mois', correct: true },
-          { text: '1 an', correct: false }
+          { text: 'App de livraison de nourriture', correct: false },
+          { text: 'Réseau social classique', correct: false },
+          { text: 'Plateforme d\'aide aux sans-abri', correct: true },
+          { text: 'Jeu mobile de divertissement', correct: false }
         ],
-        explanation: 'La roadmap d\'onboarding s\'étend sur 6 mois pour une intégration progressive et complète.',
-        tip: 'Chaque étape est importante pour votre réussite !'
+        explanation: 'Les plateformes d\'aide sociale utilisent la tech pour connecter les personnes dans le besoin avec les ressources disponibles.',
+        tip: 'L\'impact social doit être au cœur de chaque fonctionnalité !'
       }
     ]
   },
   {
-    id: 'security',
-    name: 'Sécurité',
-    icon: '🛡️',
-    description: 'Règles de sécurité IT',
+    id: 'digital-inclusion',
+    name: 'Inclusion Numérique',
+    icon: '🤝',
+    description: 'Accessibilité et inclusion dans la tech',
     difficulty: 'medium',
-    locked: false,
+    locked: true,
     questions: [
       {
-        question: 'Quelle est la règle principale pour les mots de passe ?',
+        question: 'Qu\'est-ce que l\'accessibilité numérique ?',
         answers: [
-          { text: 'Minimum 8 caractères avec symboles', correct: true },
-          { text: 'Utiliser son nom + année', correct: false },
-          { text: 'Un seul mot de passe pour tout', correct: false },
-          { text: 'Partager avec son équipe', correct: false }
+          { text: 'Avoir internet partout', correct: false },
+          { text: 'Rendre la tech utilisable par tous, y compris les personnes handicapées', correct: true },
+          { text: 'Utiliser des mots simples', correct: false },
+          { text: 'Avoir un design moderne', correct: false }
         ],
-        explanation: 'Un mot de passe sécurisé doit contenir au moins 8 caractères avec lettres, chiffres et symboles.',
-        tip: 'Utilisez un gestionnaire de mots de passe !'
+        explanation: 'L\'accessibilité numérique garantit que les technologies sont utilisables par tous, indépendamment des capacités physiques ou cognitives.',
+        tip: 'Pensez toujours aux guidelines WCAG dans vos développements !'
+      },
+      {
+        question: 'Quel principe RGAA est fondamental ?',
+        answers: [
+          { text: 'Beau design uniquement', correct: false },
+          { text: 'Perceptible, utilisable, compréhensible, robuste', correct: true },
+          { text: 'Rapide et coloré', correct: false },
+          { text: 'Mobile first seulement', correct: false }
+        ],
+        explanation: 'Les 4 principes RGAA/WCAG garantissent une accessibilité universelle.',
+        tip: 'Ces principes s\'appliquent à tous nos projets !'
       }
     ]
   },
   {
-    id: 'culture',
-    name: 'Culture d\'entreprise',
-    icon: '🌟',
-    description: 'Valeurs et culture Tech4Good',
+    id: 'sustainable-tech',
+    name: 'Tech Durable',
+    icon: '🌍',
+    description: 'Développement responsable et éco-conception',
     difficulty: 'medium',
     locked: true,
-    questions: []
+    questions: [
+      {
+        question: 'Qu\'est-ce que l\'éco-conception logicielle ?',
+        answers: [
+          { text: 'Utiliser du code vert', correct: false },
+          { text: 'Réduire l\'impact environnemental du développement', correct: true },
+          { text: 'Développer dehors', correct: false },
+          { text: 'Utiliser des serveurs solaires uniquement', correct: false }
+        ],
+        explanation: 'L\'éco-conception vise à minimiser l\'empreinte carbone des applications via un code optimisé et des choix techniques responsables.',
+        tip: 'Chaque ligne de code a un impact sur la planète !'
+      },
+      {
+        question: 'Comment réduire l\'impact environnemental d\'une app ?',
+        answers: [
+          { text: 'Optimiser les performances et réduire les transferts de données', correct: true },
+          { text: 'Ajouter plus de fonctionnalités', correct: false },
+          { text: 'Utiliser plus d\'animations', correct: false },
+          { text: 'Stocker tout en local', correct: false }
+        ],
+        explanation: 'Des apps optimisées consomment moins d\'énergie et génèrent moins de trafic réseau.',
+        tip: 'Performance = Planète !'
+      }
+    ]
   },
   {
-    id: 'advanced',
-    name: 'Expertise',
-    icon: '🎓',
-    description: 'Connaissances avancées',
+    id: 'social-impact',
+    name: 'Mesure d\'Impact',
+    icon: '📊',
+    description: 'Évaluer l\'impact social des technologies',
     difficulty: 'hard',
     locked: true,
-    questions: []
+    questions: [
+      {
+        question: 'Qu\'est-ce qu\'un indicateur d\'impact social ?',
+        answers: [
+          { text: 'Nombre de téléchargements', correct: false },
+          { text: 'Chiffre d\'affaires généré', correct: false },
+          { text: 'Nombre de vies améliorées mesurables', correct: true },
+          { text: 'Nombre de likes sur les réseaux', correct: false }
+        ],
+        explanation: 'Les indicateurs d\'impact social mesurent les changements positifs concrets dans la vie des bénéficiaires.',
+        tip: 'L\'impact social doit être mesurable et vérifiable !'
+      },
+      {
+        question: 'Qu\'est-ce que la "Theory of Change" ?',
+        answers: [
+          { text: 'Une théorie de gestion du changement', correct: false },
+          { text: 'Un modèle qui relie activités, résultats et impact final', correct: true },
+          { text: 'Une méthode de développement agile', correct: false },
+          { text: 'Un framework technique', correct: false }
+        ],
+        explanation: 'La Theory of Change décrit comment nos actions technologiques mènent à l\'impact social souhaité.',
+        tip: 'Chaque fonctionnalité doit s\'inscrire dans cette logique !'
+      }
+    ]
   }
 ])
 
@@ -636,23 +693,18 @@ const completeQuiz = async () => {
       })
       
       console.log(`✅ Quiz "${currentCategory.value.name}" sauvegardé: ${correctAnswers.value}/${questions.value.length} bonnes réponses`)
+      
+      // Recharger les quiz débloqués après sauvegarde
+      await loadUnlockedQuizzes()
     } catch (error) {
       console.error('Erreur sauvegarde quiz:', error)
     }
   }
   
   // Mettre à jour le leaderboard
-  const currentUser = leaderboard.find(p => p.isCurrentUser)
+  const currentUser = leaderboard.value.find(p => p.isCurrentUser)
   if (currentUser) {
     currentUser.totalScore += score.value
-  }
-  
-  // Débloquer le prochain quiz si score suffisant
-  if (getScorePercentage() >= 70) {
-    const currentIndex = quizCategories.findIndex(c => c.id === currentCategory.value.id)
-    if (currentIndex < quizCategories.length - 1) {
-      quizCategories[currentIndex + 1].locked = false
-    }
   }
 }
 
@@ -757,6 +809,60 @@ const shareResults = () => {
     showSnackbar.value = true
   }
 }
+
+// Charger les quiz débloqués basés sur les résultats en base
+const loadUnlockedQuizzes = async () => {
+  if (!isAuthenticated.value) {
+    // Si pas connecté, seul le premier quiz est disponible
+    quizCategories.forEach((category, index) => {
+      category.locked = index > 0
+    })
+    console.log('🔒 Utilisateur non connecté: seul le premier quiz débloqué')
+    return
+  }
+
+  try {
+    const quizHistory = await authHelpers.getQuizHistory()
+    console.log('📚 Historique des quiz complet:', quizHistory)
+    
+    // Logique de déverrouillage : chaque quiz réussi (≥70%) débloque le suivant
+    const successfulQuizzes = quizHistory.filter(quiz => quiz.score >= 70)
+    const completedCategories = new Set(successfulQuizzes.map(quiz => quiz.quiz_category))
+    
+    console.log('✅ Quiz réussis (≥70%):', successfulQuizzes.map(q => q.quiz_category))
+    console.log('📋 Catégories complétées:', Array.from(completedCategories))
+    
+    quizCategories.forEach((category, index) => {
+      if (index === 0) {
+        // Premier quiz toujours débloqué
+        category.locked = false
+        console.log(`🔓 Quiz ${index + 1} (${category.id}): Toujours débloqué`)
+      } else {
+        // Quiz suivant débloqué SEULEMENT si le précédent est réussi
+        const previousCategory = quizCategories[index - 1]
+        const previousCategoryCompleted = completedCategories.has(previousCategory.id)
+        category.locked = !previousCategoryCompleted
+        
+        console.log(`${category.locked ? '🔒' : '🔓'} Quiz ${index + 1} (${category.id}): ${category.locked ? 'Verrouillé' : 'Débloqué'} - Précédent (${previousCategory.id}) ${previousCategoryCompleted ? 'complété' : 'non complété'}`)
+      }
+    })
+    
+    console.log('🔓 Quiz débloqués finaux:', quizCategories.filter(c => !c.locked).map(c => c.name))
+    console.log('🔒 Quiz verrouillés finaux:', quizCategories.filter(c => c.locked).map(c => c.name))
+  } catch (error) {
+    console.error('❌ Erreur chargement quiz débloqués:', error)
+    // En cas d'erreur, verrouiller tous les quiz sauf le premier
+    quizCategories.forEach((category, index) => {
+      category.locked = index > 0
+    })
+    console.log('🔒 Erreur: Tous les quiz verrouillés sauf le premier')
+  }
+}
+
+// Charger les quiz débloqués au montage du composant
+onMounted(() => {
+  loadUnlockedQuizzes()
+})
 </script>
 
 <style scoped>

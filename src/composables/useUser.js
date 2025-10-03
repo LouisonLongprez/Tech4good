@@ -154,34 +154,49 @@ export function useUser() {
   const daysRemaining = computed(() => {
     if (currentUser.value?.createdAt) {
       const createdDate = new Date(currentUser.value.createdAt)
-      const endDate = new Date(createdDate)
-      endDate.setMonth(endDate.getMonth() + 6) // Ajouter 6 mois
       
+      // Calculer la date de fin (6 mois après création)
+      const endDate = new Date(createdDate)
+      endDate.setMonth(endDate.getMonth() + 6)
+      
+      // Date actuelle (sans heures pour calcul précis)
       const today = new Date()
-      const timeDiff = endDate.getTime() - today.getTime()
+      today.setHours(0, 0, 0, 0) // Réinitialiser à minuit
+      
+      // Date de fin (sans heures pour calcul précis)  
+      const endDateMidnight = new Date(endDate)
+      endDateMidnight.setHours(0, 0, 0, 0)
+      
+      // Calculer la différence en jours
+      const timeDiff = endDateMidnight.getTime() - today.getTime()
       const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
       
-      return Math.max(0, daysDiff) // Ne jamais retourner négatif
+      // Retourner le nombre de jours restants (minimum 0)
+      return Math.max(0, daysDiff)
     }
     
-    // Par défaut, si pas de date de création, on considère 6 mois complets
-    const sixMonthsFromNow = new Date()
-    sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6)
-    const timeDiff = sixMonthsFromNow.getTime() - new Date().getTime()
-    return Math.ceil(timeDiff / (1000 * 3600 * 24))
+    // Par défaut, si pas de date de création, on considère 6 mois complets (180 jours)
+    return 180
   })
 
   // Calculer le pourcentage de progression dans l'onboarding
   const onboardingProgress = computed(() => {
     if (currentUser.value?.createdAt) {
       const createdDate = new Date(currentUser.value.createdAt)
+      createdDate.setHours(0, 0, 0, 0) // Réinitialiser à minuit
+      
       const endDate = new Date(createdDate)
       endDate.setMonth(endDate.getMonth() + 6)
+      endDate.setHours(0, 0, 0, 0)
       
       const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      
+      // Calculer le nombre total de jours et les jours écoulés
       const totalDays = (endDate.getTime() - createdDate.getTime()) / (1000 * 3600 * 24)
       const daysPassed = (today.getTime() - createdDate.getTime()) / (1000 * 3600 * 24)
       
+      // Calculer le pourcentage (entre 0 et 100)
       const progress = Math.min(100, Math.max(0, (daysPassed / totalDays) * 100))
       return Math.round(progress)
     }

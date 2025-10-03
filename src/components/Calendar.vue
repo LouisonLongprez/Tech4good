@@ -46,8 +46,11 @@
               class="mb-1"
             ></v-progress-linear>
             <p class="text-caption text-medium-emphasis">
-              {{ onboardingProgress }}% complété - {{ daysRemaining }} jours restants
+              {{ onboardingProgress }}% complété
             </p>
+            <v-tooltip location="top" activator="parent">
+              <span>Onboarding sur 6 mois ({{ daysRemaining }} jours restants)</span>
+            </v-tooltip>
           </v-card-text>
         </v-card>
       </v-col>
